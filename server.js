@@ -12,15 +12,45 @@ const db = mysql.createConnection(
     {
         host: "localhost",
         user: "root",
-        password: "",
+        password: "Salvation1!",
         database: "movies_db"
 
+    },
 
-    }
-
+    console.log(`connected to movie_db`)
 
 
 );
+
+
+app.post('/api/new-movie', (req, res) => {
+
+const sql = `insert into movies(movie_name)
+values (?)`
+
+const params = req.body.movie_name;
+
+db.query(sql, params, (err, result) => {
+
+if(err){
+
+res.json({error: err.message})
+
+
+}
+res.json({
+
+    message: "success!",
+    data:req.body
+
+
+})
+
+
+})
+
+
+})
 
 
 
