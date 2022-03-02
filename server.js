@@ -22,7 +22,7 @@ const db = mysql.createConnection(
 
 );
 
-
+// creates and adds new movies to database
 app.post('/api/new-movie', (req, res) => {
 
 const sql = `insert into movies(movie_name)
@@ -44,13 +44,34 @@ res.json({
     data:req.body
 
 
+})})});
+
+// api call that retrieves data from the database and reads it
+
+app.get('/api/movies', (req, res) => {
+
+const sql = `select id, movie_name as title from movies`
+
+db.query(sql, (err, rows) => {
+
+    if(err){
+        res.status(401).json({error: err.message})
+    }
+    res.json({
+
+        message: "success",
+        data: rows
+
+
+
+    })
+
 })
 
 
 })
 
 
-})
 
 
 
