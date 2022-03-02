@@ -14,7 +14,7 @@ const db = mysql.createConnection(
     {
         host: "localhost",
         user: "root",
-        password: "",
+        password: "Salvation1!",
         database: "movies_db"
 
     },
@@ -24,7 +24,7 @@ const db = mysql.createConnection(
 
 );
 
-// creates and adds new movies to database
+// api call that creates and adds new movies to database
 app.post('/api/new-movie', (req, res) => {
 
 const sql = `insert into movies(movie_name)
@@ -103,18 +103,51 @@ message: "Movie Deleted",
 changes: result.affectedRows,
 id: params
 
+})
 
 })
 
-
 })
 
-
-})
+// Read list of all reviews and associated movie name using LEFT JOIN
+app.get('/api/movie-reviews', (req, res) => {
+  const sql = `SELECT movies.movie_name AS movie, reviews.review FROM reviews LEFT JOIN movies ON reviews.movie_id = movies.id ORDER BY movies.movie_name;`;
+  db.query(sql, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+    
+  });
+});
 
  
 
+// Update review name
+app.put('/api/review/:id', (req, res) => {
+  const sql = `UPDATE reviews SET review = ? WHERE id = ?`;
+  const params = [req.body.review, req.params.id];
 
+  db.query(sql, params, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+    } else if (!result.affectedRows) {
+      res.json({
+        message: 'Movie not found'
+      });
+    } else {
+      res.json({
+        message: 'success',
+        data: req.body,
+        changes: result.affectedRows
+      });
+    }
+  });
+});
 
 
 
