@@ -1,4 +1,5 @@
 const express = require('express');
+//neccesary to connect to database
 const mysql = require('mysql2');
 
 const Port = process.env.Port || 3001;
@@ -8,6 +9,7 @@ const app = express();
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+// connects to database
 const db = mysql.createConnection(
     {
         host: "localhost",
@@ -85,8 +87,7 @@ if(err)
 
 res.statusMessage(400).json({error: err.message})
 
-}
-else if(!result.affectedRows)
+}else if(!result.affectedRows)
 {
 
   res.json({
@@ -95,9 +96,7 @@ else if(!result.affectedRows)
 
   })
 
-
-}
-else
+}else
 res.json({
 
 message: "Movie Deleted",
@@ -123,7 +122,10 @@ id: params
 
 
 
-
+// Default response for any other request (Not Found)
+app.use((req, res) => {
+  res.status(404).end();
+});
 
 
 
