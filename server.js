@@ -71,6 +71,49 @@ db.query(sql, (err, rows) => {
 
 })
 
+// api call that Deletes movie
+app.delete('/api/movies/:id', (req, res) => {
+
+const sql = `delete from movies where id = ?`;
+
+const params = req.params.id;
+
+db.query(sql, params, (err, result) => {
+
+if(err)
+{
+
+res.statusMessage(400).json({error: err.message})
+
+}
+else if(!result.affectedRows)
+{
+
+  res.json({
+
+    message: "Movie not found"
+
+  })
+
+
+}
+else
+res.json({
+
+message: "Movie Deleted",
+changes: result.affectedRows,
+id: params
+
+
+})
+
+
+})
+
+
+})
+
+ 
 
 
 
